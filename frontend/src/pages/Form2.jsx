@@ -14,19 +14,23 @@ export default function Form2() {
   if (err) return <div className="error-state"><p>{err}</p></div>;
   if (!data) return <div className="loading-state"><div className="spinner" /><p>Loading Form 2…</p></div>;
 
-  const sections = data.sections || [];
+  const sections = data.sections || {};
   const combined = data.combined;
 
   const Row = ({ label, section }) => (
     <tr>
       <td style={{ fontWeight: 600 }}>{label}</td>
-      <td className="num">{section.total_strength ?? section.strength ?? '—'}</td>
+      <td className="num">{section.total_strength}</td>
       <td className="num" style={{ color: 'var(--success)' }}>{section.current_pass}</td>
       <td className="num">{section.current_pass_pct}%</td>
-      <td className="num" style={{ color: 'var(--success)' }}>{section.overall_pass}</td>
-      <td className="num">{section.overall_pass_pct}%</td>
-      <td className="num">{section.with_arrear_history ?? '—'}</td>
-      <td className="num">{section.without_arrear_history ?? '—'}</td>
+      <td className="num" style={{ color: 'var(--success)', fontWeight: 600 }}>{section.overall_pass}</td>
+      <td className="num" style={{ fontWeight: 600 }}>{section.overall_pass_pct}%</td>
+      <td className="num">{section.students_with_1_arrear}</td>
+      <td className="num">{section.pass_pct_incl_1_arrear}%</td>
+      <td className="num">{section.students_with_1_2_arrear}</td>
+      <td className="num">{section.pass_pct_incl_1_2_arrear}%</td>
+      <td className="num">{section.students_with_1_2_3_arrear}</td>
+      <td className="num">{section.pass_pct_incl_1_2_3_arrear}%</td>
     </tr>
   );
 
@@ -35,7 +39,7 @@ export default function Form2() {
       <div className="page-header flex-between">
         <div>
           <h1>Form 2 — Section Summary</h1>
-          <p>Combined and per-section pass/fail statistics</p>
+          <p>Combined and per-section pass percentages including arrear grace bounds</p>
         </div>
         <button className="btn btn-secondary btn-sm print-btn" onClick={() => window.print()}>🖨 Print</button>
       </div>
@@ -47,27 +51,35 @@ export default function Form2() {
               <th>Section</th>
               <th className="num">Strength</th>
               <th className="num">Current Pass</th>
-              <th className="num">Pass %</th>
+              <th className="num">Curr Pass %</th>
               <th className="num">Overall Pass</th>
-              <th className="num">Overall %</th>
-              <th className="num">With Arrear History</th>
-              <th className="num">Without Arrear History</th>
+              <th className="num">Overall Pass %</th>
+              <th className="num">1 Arrear</th>
+              <th className="num">Pass % (incl 1)</th>
+              <th className="num">≤ 2 Arrears</th>
+              <th className="num">Pass % (incl ≤ 2)</th>
+              <th className="num">≤ 3 Arrears</th>
+              <th className="num">Pass % (incl ≤ 3)</th>
             </tr>
           </thead>
           <tbody>
-            {sections.map((sec, i) => (
-              <Row key={i} label={`Section ${sec.section}`} section={sec} />
+            {Object.entries(sections).map(([secLabel, secData]) => (
+              <Row key={secLabel} label={`Section ${secLabel}`} section={secData} />
             ))}
             {combined && (
-              <tr style={{ background: 'rgba(99,102,241,0.06)', fontWeight: 700 }}>
+              <tr style={{ background: 'rgba(99,102,241,0.06)' }}>
                 <td style={{ fontWeight: 700 }}>Combined</td>
-                <td className="num">{combined.total_strength ?? combined.strength ?? '—'}</td>
-                <td className="num">{combined.current_pass}</td>
+                <td className="num">{combined.total_strength}</td>
+                <td className="num" style={{ color: 'var(--success)' }}>{combined.current_pass}</td>
                 <td className="num">{combined.current_pass_pct}%</td>
-                <td className="num">{combined.overall_pass}</td>
-                <td className="num">{combined.overall_pass_pct}%</td>
-                <td className="num">{combined.with_arrear_history ?? '—'}</td>
-                <td className="num">{combined.without_arrear_history ?? '—'}</td>
+                <td className="num" style={{ color: 'var(--success)', fontWeight: 700 }}>{combined.overall_pass}</td>
+                <td className="num" style={{ fontWeight: 700 }}>{combined.overall_pass_pct}%</td>
+                <td className="num">{combined.students_with_1_arrear}</td>
+                <td className="num">{combined.pass_pct_incl_1_arrear}%</td>
+                <td className="num">{combined.students_with_1_2_arrear}</td>
+                <td className="num">{combined.pass_pct_incl_1_2_arrear}%</td>
+                <td className="num">{combined.students_with_1_2_3_arrear}</td>
+                <td className="num">{combined.pass_pct_incl_1_2_3_arrear}%</td>
               </tr>
             )}
           </tbody>

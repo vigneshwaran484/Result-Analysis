@@ -22,7 +22,7 @@ def _sem_analysis(sem: int, hist: pd.DataFrame, students_df: pd.DataFrame, metri
         cp = int(metrics_df["current_pass"].sum())
         op = int(metrics_df["overall_pass"].sum())
         without_arr = int(metrics_df["without_arrear_history"].sum())
-        with_arr = int(metrics_df["with_arrear_history"].sum() & metrics_df["overall_pass"])
+        with_arr = int((metrics_df["with_arrear_history"] & metrics_df["overall_pass"]).sum())
         arrear_count = int(metrics_df["pending_arrears"].sum())
     else:
         sem_hist = hist[hist["semester"] == sem].copy()
